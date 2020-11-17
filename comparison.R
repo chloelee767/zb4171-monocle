@@ -1,4 +1,4 @@
-arandi <- function(cl1,cl2, adjust=TRUE){
+arandi <- function(cl1,cl2, adjust=TRUE) {
   # from: https://rdrr.io/cran/mcclust/src/R/arandi.R
   if(length(cl1)!=length(cl2)) stop("cl1 and cl2 must have same length")
   tab.1 <- table(cl1)
@@ -27,7 +27,9 @@ calculate_correlations <- function(df1, df2) {
   for (p1 in partitions1) {
     for (p2 in partition2) {
       corr_info <- calculate_1_correlation(df1, df2, p1, p2)
-      df <- rbind(df, data.frame(partition1 = p1, partition2 = p2, corr_info))
+      if (corr_info$num_common > 0) {
+        df <- rbind(df, data.frame(partition1 = p1, partition2 = p2, corr_info))
+      }
     }
   }
   return(df)
@@ -68,5 +70,5 @@ cli.calculate_stats <- function(in.path.cds_info_1, in.path.cds_info_2, out.path
   write.csv(stats$partition, out.path.partition_stats)
 }
 
-#cmd_args <- commandArgs(trailingOnly = TRUE)
-#cli.calculate_stats(cmd_args[1], cmd_args[2], cmd_args[3], cmd_args[4])
+cmd_args <- commandArgs(trailingOnly = TRUE)
+cli.calculate_stats(cmd_args[1], cmd_args[2], cmd_args[3], cmd_args[4])
