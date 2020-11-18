@@ -1,0 +1,41 @@
+---
+title: "Preliminary Results"
+output: html_notebook
+---
+```{r}
+library(monocle3)
+library(ggplot2)
+```
+
+
+# Visualising trajectory from cell_data_set RDS file
+```{r}
+cds <- readRDS('sample/results/marrow_umapNN_15.rds')
+cds
+```
+
+
+```{r}
+plot_cells(cds,
+           color_cells_by = "pseudotime", # can also colour by cluster, partition etc.
+           label_groups_by_cluster=FALSE,
+           label_leaves=FALSE,
+           label_branch_points=FALSE)
+```
+
+# Visualising trajectory from condensed trajectory file
+
+Note that we don't have edge information
+```{r}
+trajectory_df <- read.csv('sample/results/marrow_umapNN_15.csv')
+trajectory_df
+```
+
+```{r}
+ggplot(trajectory_df, aes(dim1, dim2,color=pseudotime)) + geom_point()  # can also colour by cluster, partition etc.
+```
+
+```{r}
+sessionInfo()
+```
+

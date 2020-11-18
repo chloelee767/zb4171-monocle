@@ -13,6 +13,8 @@ By ZB4171 Group 4: Chloe & Daniel
 
 ## Quick start
 
+Clone this repo, then follow the instructions below.
+
 ### 1. Downloading and preprocessing the Tabula Muris dataset <a id='quick-start-dataset'></a>
 
 1. Download the droplet data from the Tabula Muris dataset 
