@@ -104,7 +104,7 @@ python run_monocle.py --input <path_to_input> --output <path_to_output> \ # requ
     --preprocess-cds.num-dim <num_dim> --reduce-dimension.umap.n-neighbors <num_neighbors>
 ```
 
-- `--save-config-to <path>` : where should the script save the JSON file containing all the parameters used by Monocle to? If not specified, this file will not be saved.
+- `--save-config-to <path>` : where should the script save the JSON file containing all the parameters used by Monocle to? If not specified, this file will not be saved. See `sample/results/*.json` for examples.
 - `--temp-dir <path>` : where should the script save temporary files to? if not specified, it will use the current directory.
 - The flags for the parameters for the different Monocle 3 functions are named as `--<function_name>.<parameter_name>`, based on the function and parameter names in the R package, with all underscores replaced with dashes.
 - For boolean parameter values, `true`, `t`, `false`, `f` may be given.
@@ -129,7 +129,7 @@ Rscript extract_info.R <path_to_input> <path_to_output>
 ```
 
 - The input file should be a RDS file with a `cell_data_set` containing the trajectories and pseudotimes learnt by Monocle (ie. up to `order_cells`). This is the output of `run_monocle.py`. 
-- The output file will be a CSV file: see `sample/results/marrow_umapNN_15.csv` for an example of what it looks like
+- The output file will be a CSV file: see `sample/results/marrow_umapNN_15.csv` for an example of what it looks like.
 
 #### Limitations
 - The script can currently only extract the coordinates of the first 2 UMAP dimensions.

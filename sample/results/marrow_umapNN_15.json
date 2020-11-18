@@ -1,0 +1,32 @@
+{
+  "preprocess-cds": {
+    "method": "PCA",
+    "num-dim": 50,
+    "norm-method": "log",
+    "pseudo-count": 1.0,
+    "scaling": true
+  },
+  "reduce-dimension": {
+    "max-components": 2,
+    "umap.min-dist": 0.1,
+    "umap.n-neighbors": 15,
+    "umap.nn-method": "annoy",
+    "reduction-method": "UMAP"
+  },
+  "cluster-cells": {
+    "knn": 20,
+    "weight": false,
+    "louvain-iter": 1,
+    "resolution": null,
+    "partition-qval": 0.05
+  },
+  "learn-graph": {
+    "use-partition": true,
+    "close-loop": true,
+    "euclidean-distance-ratio": 1.0,
+    "geodesic-distance-ratio": 1.0,
+    "prune-graph": true,
+    "minimal-branch-len": 1,
+    "orthogonal-proj-tip": false
+  }
+}
