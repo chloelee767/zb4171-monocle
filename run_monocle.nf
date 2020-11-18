@@ -1,8 +1,7 @@
-umapNumNeighbors = Channel.of(50,55)
+params.skipcomparison = false
 
-// inFile = Channel.fromPath("s3://zb4171-monocle/data/cds_droplet_Marrow.rds")
-// runMonocleScript = Channel.fromPath('s3://zb4171-monocle/scripts/run_monocle.py')
-// extractInfoScript = Channel.fromPath('s3://zb4171-monocle/scripts/extract_info.R')
+// umapNumNeighbors = Channel.of(15) // default number of neighbours
+umapNumNeighbors = Channel.of(25, 35)
 
 process runMonocle {
         container 'lee0767/monocle3-cli'
@@ -35,61 +34,30 @@ process extractInfo {
 
         output:
         file "*.csv" into infoFiles
+
         """
         Rscript ${extractInfoScript} ${resultFile} ${resultFile.getBaseName()}.csv
         """
 }
 
-// infoFiles.into{ infoFiles1; infoFiles2 }
+process compareResults {
+        container 'rocker/r-base:4.0.2'
+        publishDir 's3://zb4171-monocle/results/compare/'
 
-// referenceFileChannel = infoFiles2.collect()[0]
+        when:
+        !params.skipComparison
 
-// process pickReferenceFile {
-//         input:
-//         file infoFileList from infoFiles.collect()
+        input:
+        file script from file("s3://zb4171-monocle/scripts/comparison.R")
+        file reference from file('s3://zb4171-monocle/results/marrow_umapNN_15.csv')
+        file comparison from infoFiles
 
-//         output:
-//         file "${infoFileList[0]}" into referenceFileChannel
+        output:
+        file "*.csv"
 
-//         ""
-// }
-
-// process pickReferenceFile {
-//         container 'rocker/r-base:4.0.2'
-
-//         input:
-//         file infoFileList from infoFiles.toSortedList()
-
-//         output:
-//         val output into comparisonChannel
-
-//         script:
-//         output = [:]
-//         reference = infoFileList[0]
-//         for (file in infoFileList) {
-//             output.put(file, reference)
-//         }
-//         ""
-// }
-
-// comparisonChannel.flatten().buffer(size: 2)
-
-// process compare {
-//         container 'rocker/r-base:4.0.2'
-//         publishDir 's3://zb4171-monocle/results/compare'
-
-//         input:
-//         file comparisonScript from file("s3://zb4171-monocle/scripts/comparison.R")
-//         val pair from comparisonChannel
-
-//         output:
-//         file "*.csv"
-
-//         script:
-//         comparison = pair[0]
-//         reference = pair[1]
-//         prefix = "${reference.getBaseName()}_${comparison.getBaseName()}"
-//         """
-//         Rscript ${comparisonScript} ${reference} ${comparison} ${prefix}_graph.csv ${prefix}_partition.csv
-//         """
-// }
+        script:
+        prefix = "${reference.getBaseName()}_${comparison.getBaseName()}"
+        """
+        Rscript ${script} ${reference} ${comparison} ${prefix}_graph.csv ${prefix}_partition.csv
+        """
+}
